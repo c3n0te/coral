@@ -1,8 +1,0 @@
-*.txt
-data/
-model/*
-*.tflite
-*.h5
-*.log
-*.png
-*.pdf

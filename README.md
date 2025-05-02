@@ -1,22 +1,29 @@
+# Build Podman Based Coral TPU Dev Environment
+`podman build -f Containerfile --rm -t coral:v0.1 --no-cache`
 
-# pycoral with docker
+# Run Podman Coral TPU Dev Environment w/ Shell Access
+`podman run -it --group-add keep-groups -v /dev:/dev --name coral localhost/coral:v0.1`
 
-To train and infer fashion mnist just run `docker compose up`
-Be sure to attach a USB coral accelerator to the host device
-
-# Run example with fMNIST
-
-`docker run --detach -v /dev:/dev -v $PWD/data:/home/data --privileged coral`
-
-Or with [custom script](data/run.sh)
-
-`docker run -v /dev:/dev -v $PWD/data:/home/data --privileged coral /home/data/run.sh`
+# To Verify Models Can Be Run on TPU
+`cd /home/coral/pycoral && bash examples/install_requirements.sh classify_image.py`
+`python3 examples/classify_image.py \
+--model test_data/mobilenet_v2_1.0_224_inat_bird_quant_edgetpu.tflite \
+--labels test_data/inat_bird_labels.txt \
+--input test_data/parrot.jpg`
 
 
-# Run converter
+Note this run command inherits the current user's permissions to all devices in the
+/dev directory on the host and provides access to all devices the container. This is 
+fine for dev environments with my specific configuration for what I need. Review these
+assumptions. YMMV.
 
-`docker run -v $PWD/data:/home/data coral /home/convert.sh`
+This repo was directly inspired by ![fvalle1/coral-docker-mnist](https://github.com/fvalle1/coral-docker-mnist) 
+on GitHub. I was having trouble installing the correct versions of the system libraries
+needed to compile and install the Coral TPU software and pulled the above repo to 
+play around.
 
-# Por Moi
-`sudo docker run --detach -v /dev:/dev -v $PWD/data:/home/data --privileged coral`
-`sudo docker exec -it <CONTAINER ID> bash`
+However, I made a few changes:
+1. Podman instead of Docker, b/c rootless containers (not silver bullet but something I 
+   value and think is important).
+2. Update to Debian Bullseye & Python3.9 -- Buster and Python3.7 are EOL
+3. Use the example from the ![Google Coral TPU documentation](https://coral.ai/docs/accelerator/get-started/#3-run-a-model-on-the-edge-tpu)
