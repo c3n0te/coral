@@ -5,6 +5,8 @@
 `podman run -it --group-add keep-groups -v /dev:/dev --name coral localhost/coral:v0.1`
 
 # To Verify Models Can Be Run on TPU
+`mkdir /home/coral && cd /home/coral && git clone https://github.com/google-coral/pycoral.git`
+<br>
 `cd /home/coral/pycoral && bash examples/install_requirements.sh classify_image.py`
 <br>
 `python3 examples/classify_image.py \
