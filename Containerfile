@@ -12,6 +12,5 @@ RUN apt-get install --yes usbutils
 RUN apt-get install --yes python3-pip
 
 RUN python3 -m pip install --no-cache-dir -U pip
-RUN mkdir /home/coral && cd /home/coral && git clone https://github.com/google-coral/pycoral.git
 
 ENTRYPOINT ["bash"]
